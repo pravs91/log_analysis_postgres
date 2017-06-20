@@ -1,16 +1,23 @@
 #!/bin/env python2.7
 
 import psycopg2
+import sys
 
 
-def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=news")
+def connect(database_name):
+    """Connect to the PostgreSQL database.  Returns a database connection.
+    Raise error if exception occurs."""
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        return db
+    except psycopg2.Error as e:
+        print "Unable to connect to database %s" % database_name
+        sys.exit(1)
 
 
 # common function to execute a query
 def executeQuery(query):
-    conn = connect()
+    conn = connect("news")
     c = conn.cursor()
     c.execute(query)
     rows = c.fetchall()
@@ -29,7 +36,7 @@ def getMostArticleViews():
 def getMostAuthorViews():
     query = "SELECT name, sum(views) as count FROM articleViews JOIN authors\
         on authors.id = articleViews.author group by name\
-        order by count desc;"
+        order by count desc LIMIT 3;"
     rows = executeQuery(query)
     print "2. The three most popular authors of all time by article views:\n"
     for row in rows:
