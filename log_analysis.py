@@ -1,3 +1,5 @@
+#!/bin/env python2.7
+
 import psycopg2
 
 
@@ -6,6 +8,7 @@ def connect():
     return psycopg2.connect("dbname=news")
 
 
+# common function to execute a query
 def executeQuery(query):
     conn = connect()
     c = conn.cursor()
