@@ -18,6 +18,10 @@ To run the script, do:
 
 ## VIEWS created to answer these questions
 
+The view ```articleViews``` is created joining the tables ```articles``` and ```log``` to get the title, author and view count for each article. This is helpful to answer questions 1 and 2.
+
+The views ```requests``` and ```errors``` are created as the total number of requests per date on the log and total errors per day (status NOT 200 OK)
+
 ```
 CREATE VIEW articleViews as select title,author,count(path) as views 
         from articles join log 
